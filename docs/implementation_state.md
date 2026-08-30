@@ -43,3 +43,5 @@ python ai\flood\build_historical_stats.py
 set COMPANION_DEMO_MODE=false
 python tools\monitor_loop.py
 ```
+
+**Health baseline:** See `docs/health_calibration.md` — 5‑min on-device calibration (MAX30102 + MLX90614), no dataset.

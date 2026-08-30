@@ -16,6 +16,7 @@ import httpx
 from dotenv import load_dotenv
 
 from companion_core.baseline import BaselineLearner
+from companion_core.calibration import CalibrationPhase, CalibrationSession
 from companion_core.compact_tree import CompactTree
 from companion_core.config import HEALTH
 from companion_core.demo import demo_reading
@@ -34,11 +35,14 @@ class CompanionPipeline:
         self.demo = demo
         self.extract = FeatureExtractor()
         self.baseline = BaselineLearner()
+        self.calibration = CalibrationSession()
         self.mq = Mq135Tracker(warmup_samples=0 if demo else 40)
         self.store = PatientStore(sd_root)
         saved = self.store.read_baseline()
-        if saved:
+        if saved and saved.get("ready"):
             self.baseline.load_dict(saved)
+        elif not demo:
+            self.calibration.start(time.time())
         self.tree = None
         p = Path("ai/health/models/health_tree.json")
         if p.exists():
@@ -53,6 +57,20 @@ class CompanionPipeline:
             reading.mq135_relative = rel
         reading.mq_state = mq_state
         reading = validate_reading(reading)
+
+        if self.calibration.phase == CalibrationPhase.CALIBRATING:
+            st = self.calibration.feed(reading, reading.timestamp_s)
+            if self.calibration.phase == CalibrationPhase.READY:
+                b = self.calibration.to_baseline()
+                if b:
+                    self.baseline.b = b
+                    self.store.write_baseline(self.baseline.to_dict())
+            return {
+                "calibration": st,
+                "health": {"status": "CALIBRATING", "message": st["message"]},
+                "demo_mode": reading.demo_mode,
+            }
+
         feats = self.extract.extract(reading, self.baseline.b, self.prev_abnormal)
         h_score, reason = heuristic_risk(feats, self.baseline.b)
         t_score = self.tree.predict_score(health_vector(feats)) if self.tree and feats.valid else None
