@@ -1,0 +1,53 @@
+{
+  "selected": "decision_tree",
+  "reports": {
+    "decision_tree": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "roc_auc": 1.0,
+      "confusion_matrix": [
+        [
+          40,
+          0
+        ],
+        [
+          0,
+          15
+        ]
+      ],
+      "false_positives": 0,
+      "false_negatives": 0,
+      "n_test": 55,
+      "note": "DEMO DATA software test metrics. Not operational flood validation."
+    },
+    "random_forest": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "roc_auc": 1.0,
+      "confusion_matrix": [
+        [
+          40,
+          0
+        ],
+        [
+          0,
+          15
+        ]
+      ],
+      "false_positives": 0,
+      "false_negatives": 0,
+      "n_test": 55,
+      "note": "DEMO DATA software test metrics. Not operational flood validation."
+    }
+  },
+  "feature_schema_version": "flood_features_v1",
+  "model_name": "flood_tree_v1",
+  "model_version": "1.0.0",
+  "validation": "PENDING \u2014 demo software metrics only",
+  "data_kind": "DEMO DATA",
+  "meaning": "LOCATION-SPECIFIC FLOOD EARLY-RISK PREDICTION, not guaranteed detection"
+}

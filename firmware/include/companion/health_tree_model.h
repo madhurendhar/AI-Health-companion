@@ -1,0 +1,11 @@
+#ifndef COMPANION_HEALTH_TREE_MODEL_H
+#define COMPANION_HEALTH_TREE_MODEL_H
+#include "companion/tree_infer.h"
+#define HEALTH_TREE_N_FEATURES 14
+#define HEALTH_TREE_N_NODES 3
+static const companion_tree_node_t HEALTH_TREE_NODES[HEALTH_TREE_N_NODES] = {
+  {8, 0.54850000f, 1, 2, 0.00000000f},
+  {-1, 0.00000000f, -1, -1, 0.00000000f},
+  {-1, 0.00000000f, -1, -1, 1.00000000f},
+};
+#endif /* COMPANION_HEALTH_TREE_MODEL_H */

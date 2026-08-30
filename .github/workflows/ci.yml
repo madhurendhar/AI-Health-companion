@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: |
+          python -m venv .venv
+          . .venv/bin/activate
+          pip install -r requirements.txt
+          python ai/health/preprocessing/make_demo.py
+          python ai/flood/preprocessing/make_demo.py
+          python -m ai.health.train
+          python -m ai.health.export
+          python -m ai.flood.train
+          python -m ai.flood.export
+          pytest
+          pytest -m integration
+
+  firmware:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install platformio
+      - run: pio run
+        working-directory: firmware

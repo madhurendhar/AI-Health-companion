@@ -1,0 +1,13 @@
+#ifndef COMPANION_FLOOD_TREE_MODEL_H
+#define COMPANION_FLOOD_TREE_MODEL_H
+#include "companion/tree_infer.h"
+#define FLOOD_TREE_N_FEATURES 9
+#define FLOOD_TREE_N_NODES 5
+static const companion_tree_node_t FLOOD_TREE_NODES[FLOOD_TREE_N_NODES] = {
+  {4, 427.25000000f, 1, 4, 0.00000000f},
+  {6, 65.75000000f, 2, 3, 0.00000000f},
+  {-1, 0.00000000f, -1, -1, 0.00000000f},
+  {-1, 0.00000000f, -1, -1, 0.00000000f},
+  {-1, 0.00000000f, -1, -1, 1.00000000f},
+};
+#endif /* COMPANION_FLOOD_TREE_MODEL_H */

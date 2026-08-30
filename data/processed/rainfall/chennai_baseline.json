@@ -1,0 +1,10 @@
+{
+  "rain_24h_p50": 128.5,
+  "rain_24h_p90": 257.5,
+  "rain_24h_p95": 340.39999999999986,
+  "rain_24h_p99": 733.5799999999947,
+  "n_hours": 2529,
+  "location": "Chennai",
+  "method": "historical_rainfall_percentile",
+  "validation": "NOT flood-event validation \u2014 rainfall anomaly baseline only"
+}

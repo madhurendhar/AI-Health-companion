@@ -1,0 +1,47 @@
+{
+  "type": "tree",
+  "task": "flood",
+  "n_features": 9,
+  "nodes": [
+    {
+      "f": 4,
+      "t": 427.25,
+      "l": 1,
+      "r": 4,
+      "v": 0.0
+    },
+    {
+      "f": 6,
+      "t": 65.75,
+      "l": 2,
+      "r": 3,
+      "v": 0.0
+    },
+    {
+      "f": -1,
+      "t": 0.0,
+      "l": -1,
+      "r": -1,
+      "v": 0.0
+    },
+    {
+      "f": -1,
+      "t": 0.0,
+      "l": -1,
+      "r": -1,
+      "v": 0.0
+    },
+    {
+      "f": -1,
+      "t": 0.0,
+      "l": -1,
+      "r": -1,
+      "v": 1.0
+    }
+  ],
+  "model_name": "flood_tree_v1",
+  "model_version": "1.0.0",
+  "feature_schema_version": "flood_features_v1",
+  "data_kind": "DEMO DATA",
+  "validation": "PENDING"
+}

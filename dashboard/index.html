@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flood Early-Warning Dashboard</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Flood Early-Warning System</h1>
+    <p class="disclaimer">Location-specific flood <strong>early-risk</strong> prediction. Not guaranteed flood detection.</p>
+    <p id="demo-banner" class="banner hidden">DEMO MODE / SIMULATED DATA</p>
+  </header>
+  <main class="grid">
+    <article>
+      <h2>Flood risk</h2>
+      <ul id="flood"></ul>
+    </article>
+    <article>
+      <h2>Rainfall (NWDP)</h2>
+      <ul id="rain"></ul>
+    </article>
+    <article>
+      <h2>System</h2>
+      <ul id="sys"></ul>
+    </article>
+    <article>
+      <h2>Data status</h2>
+      <ul id="data"></ul>
+    </article>
+  </main>
+  <section class="demo">
+    <h2>Location &amp; demo</h2>
+    <label>Location
+      <select id="location">
+        <option value="Chennai">Chennai (NWDP)</option>
+        <option value="Kanyakumari">Kanyakumari (Open-Meteo fallback)</option>
+      </select>
+    </label>
+    <button data-flood="normal">LOW rainfall</button>
+    <button data-flood="approaching">WATCH rainfall</button>
+    <button data-flood="high">HIGH rainfall</button>
+  </section>
+  <script src="/app.js"></script>
+</body>
+</html>

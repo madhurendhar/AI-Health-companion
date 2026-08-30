@@ -1,0 +1,32 @@
+{
+  "Chennai": {
+    "location": "Chennai",
+    "row_count": 3822,
+    "valid_count": 3822,
+    "invalid_count": 0,
+    "duplicates_removed": true,
+    "date_min": "2021-08-09 08:30:00+00:00",
+    "date_max": "2026-08-28 11:30:00+00:00",
+    "stations": [
+      "Chennai Mylapore (DGPOffice)",
+      "SGSWRDC Campus (Tharamani site)"
+    ],
+    "districts": [
+      "Chennai"
+    ],
+    "rainfall_mm": {
+      "min": 0.5,
+      "max": 1412.5,
+      "mean": 4.832679225536368,
+      "p50": 1.5,
+      "p90": 11.0,
+      "p95": 17.5,
+      "p99": 38.5
+    },
+    "negative_rainfall": 0,
+    "missing_station": 0,
+    "source": "NWDP",
+    "flood_event_labels": "PENDING EXTERNAL DATA",
+    "note": "Rainfall ingestion only. Supervised flood labels not available in NWDP resources."
+  }
+}

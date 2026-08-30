@@ -1,0 +1,47 @@
+# Secrets
+.env
+.env.local
+*.pem
+credentials.json
+aws_credentials*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+
+# Firmware / PlatformIO
+firmware/.pio/
+firmware/.vscode/
+
+# Local S3 fallback and runtime
+data/local_s3/
+data/runtime/
+data/processed/rainfall/cache/
+*.log
+
+# SD / patient local copies (never commit)
+sdcard/patient/
+firmware/data/patient/
+
+# Models generated locally (keep exported JSON/C in repo)
+ai/**/__pycache__/
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace

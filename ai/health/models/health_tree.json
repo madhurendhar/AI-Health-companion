@@ -1,0 +1,33 @@
+{
+  "type": "tree",
+  "task": "health",
+  "n_features": 14,
+  "nodes": [
+    {
+      "f": 8,
+      "t": 0.5485000014305115,
+      "l": 1,
+      "r": 2,
+      "v": 0.0
+    },
+    {
+      "f": -1,
+      "t": 0.0,
+      "l": -1,
+      "r": -1,
+      "v": 0.0
+    },
+    {
+      "f": -1,
+      "t": 0.0,
+      "l": -1,
+      "r": -1,
+      "v": 1.0
+    }
+  ],
+  "model_name": "health_tree_v1",
+  "model_version": "1.0.0",
+  "feature_schema_version": "health_features_v1",
+  "data_kind": "DEMO DATA",
+  "validation": "PENDING"
+}
