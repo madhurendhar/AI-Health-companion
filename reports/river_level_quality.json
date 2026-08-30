@@ -1,0 +1,17 @@
+{
+  "source": "NWDP river_level resource",
+  "resource_id": "77459b05-fcbd-4b8c-97e1-e2a33d359ce3",
+  "station": "Nandambakkam CheckDam",
+  "river": "Adyar",
+  "row_count": 22279,
+  "invalid": 0,
+  "date_min": "2021-12-15 11:30:00+00:00",
+  "date_max": "2025-12-31 17:30:00+00:00",
+  "level_m": {
+    "min": 0.001,
+    "max": 12.163,
+    "p90": 10.065,
+    "p95": 10.065,
+    "p99": 10.065
+  }
+}

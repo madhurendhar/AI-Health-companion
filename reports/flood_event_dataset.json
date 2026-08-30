@@ -1,0 +1,21 @@
+{
+  "source_labels": "IFI-Impacts v3 (Chennai LGD 568)",
+  "source_rainfall": "NWDP Chennai",
+  "source_river": "NWDP Adyar river level",
+  "rows": 539,
+  "flood_event_days": 15,
+  "flood_event_next_day_positives": 15,
+  "date_min": "2021-08-27 00:00:00+00:00",
+  "date_max": "2026-08-28 00:00:00+00:00",
+  "positive_rate": 0.027829313543599257,
+  "river_level_thresholds_m": {
+    "p90": 10.065,
+    "p95": 10.065,
+    "p99": 10.065
+  },
+  "target_columns": [
+    "flood_event",
+    "flood_event_next_day"
+  ],
+  "validation": "REAL IFI flood inventory labels \u2014 not synthetic"
+}

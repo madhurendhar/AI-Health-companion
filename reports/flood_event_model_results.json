@@ -1,0 +1,90 @@
+{
+  "selected": "logistic_regression",
+  "reports": {
+    "logistic_regression": {
+      "accuracy": 0.5259259259259259,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "roc_auc": null,
+      "confusion_matrix": [
+        [
+          71,
+          64
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "false_positives": 64,
+      "false_negatives": 0,
+      "n_test": 135,
+      "n_test_positives": 0
+    },
+    "decision_tree": {
+      "accuracy": 0.7481481481481481,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "roc_auc": null,
+      "confusion_matrix": [
+        [
+          101,
+          34
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "false_positives": 34,
+      "false_negatives": 0,
+      "n_test": 135,
+      "n_test_positives": 0
+    },
+    "random_forest": {
+      "accuracy": 0.8592592592592593,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "roc_auc": null,
+      "confusion_matrix": [
+        [
+          116,
+          19
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "false_positives": 19,
+      "false_negatives": 0,
+      "n_test": 135,
+      "n_test_positives": 0
+    }
+  },
+  "target": "flood_event_next_day",
+  "features": [
+    "rain_1h",
+    "rain_3h",
+    "rain_6h",
+    "rain_12h",
+    "rain_24h",
+    "rain_48h",
+    "rain_72h",
+    "intensity",
+    "trend"
+  ],
+  "data_kind": "REAL_FLOOD_EVENT_LABELS",
+  "label_source": "IFI-Impacts v3 (Chennai)",
+  "rainfall_source": "NWDP",
+  "split": "temporal (earlier train, later test)",
+  "n_train": 404,
+  "n_test": 135,
+  "train_positives": 15,
+  "test_positives": 0,
+  "validation": "Honest metrics on held-out future dates \u2014 limited overlap window (NWDP 2021-2023 vs IFI events)",
+  "model_path": "C:\\AI-Health-companion\\ai\\flood\\models\\flood_event.joblib"
+}

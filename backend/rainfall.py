@@ -157,16 +157,7 @@ class CompositeRainfallProvider(RainfallProvider):
     def hourly_mm(self, location: str) -> tuple[list[float], float, str, dict]:
         src = self._source_for(location)
         if src == "nwdp":
-            try:
-                return self._nwdp.hourly_mm(location)
-            except Exception as exc:
-                try:
-                    hours, ts, label, meta = self._meteo.hourly_mm(location)
-                    meta["nwdp_error"] = str(exc)
-                    meta["fallback"] = "open_meteo"
-                    return hours, ts, "open_meteo_fallback", meta
-                except Exception:
-                    raise exc
+            return self._nwdp.hourly_mm(location)
         return self._meteo.hourly_mm(location)
 
 

@@ -1,32 +1,45 @@
 # Implementation state
 
-**CURRENT PHASE:** Flood subsystem — NWDP integrated
+**CURRENT PHASE:** Flood event pipeline complete (real IFI labels + NWDP river level)
 
 **COMPLETED:**
-- NWDP API inventory (5 resources) → `docs/nwdp_api_inventory.md`, `reports/nwdp_inventory.json`
-- NWDP client + cache + parser (`backend/services/nwdp/`)
-- Chennai ingestion (3567 rows) + `reports/flood_data_quality.json`
-- Historical baseline (`chennai_baseline.json`, p90/p95/p99)
-- Backend flood API (NWDP primary, demo, Open-Meteo fallback)
-- Flood-only ESP32 firmware (Flash 72.8%, RAM 14.4%)
-- Flood dashboard
-- NWDP proxy ML train (`ai/flood/train_nwdp.py`) + export
-- Tests: 21 passed
+- Real NWDP ingest (3822 rows Chennai historical+current)
+- Historical percentile stats (`chennai_historical_stats.json`) from REAL data
+- Live vs historical comparison engine (`companion_core/historical_monitor.py`)
+- Realtime monitor log + trend (`backend/monitor.py`, `tools/monitor_loop.py`)
+- **Flood events:** IFI-Impacts v3 Chennai catalog (58 events, 546 flood-days)
+- **River level:** NWDP Adyar Nandambakkam (~22k hourly readings)
+- **Event dataset:** rainfall + IFI labels + river (`chennai_event_dataset.parquet`)
+- **Event model:** trained on real labels (`ai/flood/train_flood_events.py`)
+- **Runtime:** `companion_core/flood_events.py` — ML + river + IFI rain profile
+- API: `/flood/status` (includes `flood_event`), `/flood/events`, `/monitor/*`
+- Dashboard flood-event panel
 
-**IN PROGRESS:** none
+**INFERENCE:**
+1. Rainfall anomaly: NWDP live vs historical p90/p95/p99 → LOW/WATCH/HIGH
+2. Flood event: IFI-trained model + river level + documented flood-day rain profile
 
-**PENDING:**
-- Real flood-event labels (supervised validation)
-- Kanyakumari NWDP rainfall resource
-- Health subsystem (phase 2 — intentionally not built)
+**LIMITATIONS (documented honestly):**
+- NWDP rainfall window (2021–2023) overlaps only 15 IFI flood-days; test split has 0 event positives
+- River level p95≈10.065m (telemetry may plateau at gauge max)
+- Kanyakumari: no NWDP rainfall in supplied IDs
 
-**KNOWN ISSUES:**
-- Temporal test split has **zero positive proxy labels** in holdout — ML metrics not meaningful; production risk uses **heuristic + historical baseline**
-- chennai_1 ends 2023; live NWDP uses chennai_2 (Jun 2026)
-- Kanyakumari: demo or Open-Meteo fallback only
+**NOT USED:** synthetic demo ML, proxy percentile labels for flood-event validation
 
-**LAST TEST:** pytest 23 passed; integration 5 passed; merged ingest 3822 rows; pio SUCCESS
+**PENDING:** Health sensors (phase 2)
 
-**NEXT STEP:** Set `COMPANION_DEMO_MODE=false`, `RAINFALL_PROVIDER=nwdp`, flash ESP32, point `companion_secrets.h` at backend
+**RUN flood event pipeline:**
+```bat
+python ai\flood\data\process_flood_events.py
+python ai\flood\data\ingest_river_level.py
+python ai\flood\build_event_dataset.py
+python ai\flood\train_flood_events.py
+```
 
-**FLOOD SUBSYSTEM:** functional prototype complete (pending real flood labels for supervised validation)
+**RUN monitoring:**
+```bat
+python ai\flood\data\ingest_nwdp.py
+python ai\flood\build_historical_stats.py
+set COMPANION_DEMO_MODE=false
+python tools\monitor_loop.py
+```

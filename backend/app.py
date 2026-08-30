@@ -10,39 +10,30 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from backend.sklearn_model import SklearnFloodModel
-from companion_core.compact_tree import CompactTree
-from companion_core.config import FLOOD
-from companion_core.demo import DEMO_FLOOD_HOURLY
 from backend.flood_service import FloodEngine, load_baseline
+from backend.monitor import recent, trend
 from backend.rainfall import build_provider, features_for
+from companion_core.demo import DEMO_FLOOD_HOURLY
 from backend.services.nwdp.locations import LOCATION_SOURCES, SUPPORTED_LOCATIONS
 
 load_dotenv()
 
 API_TOKEN = os.getenv("COMPANION_API_TOKEN", "change-me-local-token")
-DEMO_MODE = os.getenv("COMPANION_DEMO_MODE", "true").lower() in ("1", "true", "yes")
+DEMO_MODE = os.getenv("COMPANION_DEMO_MODE", "false").lower() in ("1", "true", "yes")
 
 app = FastAPI(title="Flood Early-Warning Backend", version="0.2.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 _demo_scenario = "normal"
-_flood_tree = None
-_flood_sklearn = None
 _engine: FloodEngine | None = None
 
 
-def _load_models():
-    global _flood_tree, _flood_sklearn, _engine
-    fp = Path("ai/flood/models/flood_tree.json")
-    if fp.exists():
-        _flood_tree = CompactTree.load(fp)
-    jp = Path("ai/flood/models/selected.joblib")
-    _flood_sklearn = SklearnFloodModel.load(jp, FLOOD.model_name, FLOOD.model_version)
-    _engine = FloodEngine(build_provider(demo=DEMO_MODE, scenario=_demo_scenario), _flood_tree, _flood_sklearn)
+def _load_engine():
+    global _engine
+    _engine = FloodEngine(build_provider(demo=DEMO_MODE, scenario=_demo_scenario))
 
 
-_load_models()
+_load_engine()
 
 
 def require_token(authorization: str | None = Header(default=None), x_api_token: str | None = Header(default=None)):
@@ -58,7 +49,23 @@ def require_token(authorization: str | None = Header(default=None), x_api_token:
 
 def engine(demo: bool | None = None) -> FloodEngine:
     use_demo = DEMO_MODE if demo is None else demo
-    return FloodEngine(build_provider(demo=use_demo, scenario=_demo_scenario), _flood_tree, _flood_sklearn)
+    return FloodEngine(build_provider(demo=use_demo, scenario=_demo_scenario))
+
+
+@app.get("/monitor/status")
+def monitor_status(location: str = "Chennai"):
+    f = engine().evaluate(location, demo=DEMO_MODE)
+    return {
+        "location": location,
+        "live": f,
+        "trend": trend(location),
+        "data_source": "NWDP",
+    }
+
+
+@app.get("/monitor/history")
+def monitor_history(location: str = "Chennai", n: int = 20):
+    return {"location": location, "entries": recent(location, n), "trend": trend(location)}
 
 
 @app.get("/data-status")
@@ -70,9 +77,8 @@ def data_status():
         "open_meteo_locations": [k for k, v in LOCATION_SOURCES.items() if v == "open_meteo"],
         "supported_locations": SUPPORTED_LOCATIONS,
         "kanyakumari_rainfall": "open_meteo_fallback (no NWDP rainfall resource in supplied IDs)",
-        "flood_event_labels": "PENDING EXTERNAL DATA",
-        "baseline_available": {loc: load_baseline(loc) is not None for loc in ("Chennai",)},
-        "flood_model_loaded": _flood_tree is not None or _flood_sklearn is not None,
+        "inference_mode": "NWDP live vs historical percentiles (no synthetic data)",
+        "historical_stats": {loc: load_baseline(loc) is not None for loc in ("Chennai",)},
     }
 
 
@@ -84,10 +90,11 @@ def system_status():
         "network": "ONLINE",
         "demo_mode": DEMO_MODE,
         "flood_model": {
-            "name": _flood_tree.model_name if _flood_tree else FLOOD.model_name,
-            "version": _flood_tree.model_version if _flood_tree else FLOOD.model_version,
-            "loaded": _flood_tree is not None or _flood_sklearn is not None,
-            "validation": "demo supervised PENDING real flood labels",
+            "name": "nwdp_historical_monitor_v1",
+            "method": "live NWDP vs historical percentile comparison",
+            "synthetic_ml": False,
+            "flood_event_model": "flood_event_ifi_nwdp_v1",
+            "flood_event_labels": "IFI-Impacts v3 (real Chennai events)",
         },
         "rainfall_provider": os.getenv("RAINFALL_PROVIDER", "nwdp"),
     }
@@ -117,6 +124,20 @@ def flood_status(location: str = "Chennai", demo: bool | None = None):
         return engine(demo).evaluate(location, demo=demo if demo is not None else DEMO_MODE)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/flood/events")
+def flood_events(location: str = "Chennai", limit: int = 50):
+    from companion_core.flood_events import event_inventory_summary, latest_river_level, list_historical_events
+
+    return {
+        "location": location,
+        "inventory": event_inventory_summary(),
+        "historical_event_days": list_historical_events(location, limit),
+        "river_level": latest_river_level(),
+        "label_source": "IFI-Impacts v3 (IMD) — real documented flood events",
+        "validation": "Not synthetic — see reports/flood_events_inventory.json",
+    }
 
 
 @app.get("/flood/history")

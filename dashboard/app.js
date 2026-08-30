@@ -20,11 +20,13 @@ async function get(path) {
 }
 
 async function refresh() {
-  const [flood, rain, sys, data] = await Promise.all([
+  const [flood, rain, sys, data, mon, ev] = await Promise.all([
     get(`/flood/status?location=${LOC}`),
     get(`/rainfall?location=${LOC}`),
     get("/system/status"),
     get("/data-status"),
+    get(`/monitor/status?location=${LOC}`),
+    get(`/flood/events?location=${LOC}&limit=5`),
   ]);
   document.getElementById("demo-banner").classList.toggle(
     "hidden",
@@ -40,12 +42,14 @@ async function refresh() {
     li("data status", flood.data_status),
     li("stale", flood.stale),
     li("network", flood.network),
-    li("baseline used", flood.baseline_used),
-    li("ML tree", flood.ml_tree_used),
+    li("inference", flood.inference),
+    li("historical stats", flood.historical_stats_available),
     li("poll interval s", flood.poll_interval_s),
     li("reason", flood.reason),
     li("meaning", flood.meaning),
-    li("supervised labels", flood.supervised_labels),
+    li("event risk", flood.flood_event?.risk, "st-" + (flood.flood_event?.risk || "")),
+    li("event probability", flood.flood_event?.probability),
+    li("event reason", flood.flood_event?.reason),
   ].join("");
 
   const w = flood.rainfall || flood.windows || {};
@@ -61,21 +65,40 @@ async function refresh() {
     li("tail 6h", (rain.hourly_tail_mm || []).join(", ")),
   ].join("");
 
-  document.getElementById("sys").innerHTML = [
-    li("subsystem", sys.subsystem),
-    li("health phase", sys.health_subsystem),
-    li("flood model", `${sys.flood_model?.name} v${sys.flood_model?.version}`),
-    li("model loaded", sys.flood_model?.loaded),
-    li("validation", sys.flood_model?.validation),
-    li("rainfall provider", sys.rainfall_provider),
-    li("demo mode", sys.demo_mode),
+  const hc = flood.historical_comparison;
+  document.getElementById("hist").innerHTML = hc
+    ? (hc.anomalies || [])
+        .filter((a) => a.level !== "normal")
+        .map((a) => li(a.window, `${a.current_mm}mm vs p90=${a.historical_p90} (${a.level})`))
+        .join("") || li("status", "within historical norms")
+    : li("status", "demo mode — no historical compare");
+
+  const tr = mon.trend || {};
+  document.getElementById("trend").innerHTML = [
+    li("escalating", tr.escalating),
+    li("risk trend", tr.risk_trend),
+    li("latest", tr.latest_status),
   ].join("");
 
-  document.getElementById("data").innerHTML = [
-    li("NWDP locations", (data.nwdp_locations || []).join(", ")),
-    li("Kanyakumari", data.kanyakumari_rainfall),
-    li("flood labels", data.flood_event_labels),
-    li("Chennai baseline", data.baseline_available?.Chennai),
+  document.getElementById("sys").innerHTML = [
+    li("subsystem", sys.subsystem),
+    li("flood model", sys.flood_model?.name),
+    li("method", sys.flood_model?.method),
+    li("rainfall provider", sys.rainfall_provider),
+    li("demo mode", sys.demo_mode),
+    li("inference", data.inference_mode),
+    li("historical stats", data.historical_stats?.Chennai),
+  ].join("");
+
+  const fe = flood.flood_event || {};
+  const river = fe.river_level || ev.river_level;
+  document.getElementById("events").innerHTML = [
+    li("label source", ev.label_source),
+    li("inventory events", ev.inventory?.event_records),
+    li("flood days catalogued", ev.inventory?.flood_days),
+    li("river level m", river?.level_m),
+    li("river status", river?.status),
+    li("recent IFI days", (ev.historical_event_days || []).map((e) => e.date).join(", ")),
   ].join("");
 }
 
