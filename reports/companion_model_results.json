@@ -1,0 +1,176 @@
+{
+  "problem_id": "26181",
+  "problem_title": "AI Personal Health Companion \u2014 privacy-preserving screening + disaster early warning",
+  "validation": "DEMO DATA pipeline test only \u2014 NOT clinical or operational disaster validation",
+  "models": {
+    "health": {
+      "task": "health_screening",
+      "selected": "random_forest",
+      "reports": {
+        "logistic_regression": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "roc_auc": 1.0,
+          "confusion_matrix": [
+            [
+              72,
+              0
+            ],
+            [
+              0,
+              40
+            ]
+          ],
+          "false_positives": 0,
+          "false_negatives": 0,
+          "n_test": 112,
+          "note": "DEMO DATA software test metrics. NOT medical validation."
+        },
+        "decision_tree": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "roc_auc": 1.0,
+          "confusion_matrix": [
+            [
+              72,
+              0
+            ],
+            [
+              0,
+              40
+            ]
+          ],
+          "false_positives": 0,
+          "false_negatives": 0,
+          "n_test": 112,
+          "note": "DEMO DATA software test metrics. NOT medical validation."
+        },
+        "random_forest": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "roc_auc": 1.0,
+          "confusion_matrix": [
+            [
+              72,
+              0
+            ],
+            [
+              0,
+              40
+            ]
+          ],
+          "false_positives": 0,
+          "false_negatives": 0,
+          "n_test": 112,
+          "note": "DEMO DATA software test metrics. NOT medical validation."
+        }
+      },
+      "data_kind": "DEMO DATA"
+    },
+    "environment": {
+      "task": "environmental_disaster",
+      "selected": "logistic_regression",
+      "export_tree": "decision_tree",
+      "labels": [
+        "LOW",
+        "WATCH",
+        "HIGH"
+      ],
+      "features": [
+        "ambient_temp_c",
+        "humidity",
+        "heat_index",
+        "mq135_relative",
+        "rain_1h",
+        "rain_24h",
+        "rain_72h",
+        "intensity",
+        "trend"
+      ],
+      "reports": {
+        "logistic_regression": {
+          "accuracy": 0.38461538461538464,
+          "precision_macro": 0.3333333333333333,
+          "recall_macro": 0.3333333333333333,
+          "f1_macro": 0.3333333333333333,
+          "confusion_matrix": [
+            [
+              0,
+              40,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              25
+            ]
+          ],
+          "n_test": 65,
+          "note": "DEMO DATA \u2014 not operational disaster validation"
+        },
+        "decision_tree": {
+          "accuracy": 0.0,
+          "precision_macro": 0.0,
+          "recall_macro": 0.0,
+          "f1_macro": 0.0,
+          "confusion_matrix": [
+            [
+              0,
+              40,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              25,
+              0
+            ]
+          ],
+          "n_test": 65,
+          "note": "DEMO DATA \u2014 not operational disaster validation"
+        },
+        "random_forest": {
+          "accuracy": 0.38461538461538464,
+          "precision_macro": 0.3333333333333333,
+          "recall_macro": 0.3333333333333333,
+          "f1_macro": 0.3333333333333333,
+          "confusion_matrix": [
+            [
+              0,
+              40,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              25
+            ]
+          ],
+          "n_test": 65,
+          "note": "DEMO DATA \u2014 not operational disaster validation"
+        }
+      },
+      "data_kind": "DEMO DATA"
+    }
+  }
+}

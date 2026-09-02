@@ -69,6 +69,7 @@ def write_c_header(payload: dict, path: Path, guard: str = "COMPANION_HEALTH_TRE
         f"#ifndef {guard}",
         f"#define {guard}",
         '#include "companion/tree_infer.h"',
+        '#include "tree_infer.h"',
         f"#define HEALTH_TREE_N_FEATURES {payload['n_features']}",
         f"#define HEALTH_TREE_N_NODES {len(nodes)}",
         "static const companion_tree_node_t HEALTH_TREE_NODES[HEALTH_TREE_N_NODES] = {",

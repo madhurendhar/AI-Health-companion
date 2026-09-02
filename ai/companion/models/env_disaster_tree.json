@@ -1,0 +1,49 @@
+{
+  "type": "tree",
+  "task": "environment",
+  "n_features": 9,
+  "nodes": [
+    {
+      "f": 0,
+      "t": 34.0,
+      "l": 1,
+      "r": 2,
+      "v": 0.0
+    },
+    {
+      "f": -1,
+      "t": 0.0,
+      "l": -1,
+      "r": -1,
+      "v": 0.0
+    },
+    {
+      "f": -1,
+      "t": 0.0,
+      "l": -1,
+      "r": -1,
+      "v": 1.0
+    }
+  ],
+  "model_name": "env_disaster_tree_v1",
+  "model_version": "1.0.0",
+  "feature_schema_version": "health_features_v1",
+  "data_kind": "DEMO DATA",
+  "validation": "PENDING real disaster labels",
+  "labels": [
+    "LOW",
+    "WATCH",
+    "HIGH"
+  ],
+  "feature_names": [
+    "ambient_temp_c",
+    "humidity",
+    "heat_index",
+    "mq135_relative",
+    "rain_1h",
+    "rain_24h",
+    "rain_72h",
+    "intensity",
+    "trend"
+  ]
+}

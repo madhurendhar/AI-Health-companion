@@ -35,29 +35,26 @@ Dashboard: http://127.0.0.1:8080 (Chennai NWDP, Kanyakumari Open-Meteo fallback)
 | Flood risk (baseline + heuristic + ML) | Backend |
 | LOW / WATCH / HIGH | ESP32 OLED / LED / buzzer via backend poll |
 
-## Health phase 2 (not built yet)
+## Health phase 2
 
-Sensors: MAX30102, MLX90614, DHT22, MQ135. See `docs/architecture.md`.
+Sensors: MAX30102, MLX90614, DHT22, MQ135. Firmware + on-device ML trees implemented — see `docs/esp_upload.md` and `docs/health_calibration.md`.
 
-## Firmware (ESP32)
+**Firmware:** Full ESP32 build with all 4 sensors + edge ML trees + flood WiFi poll. See `docs/esp_upload.md`.
 
-Install [PlatformIO](https://platformio.org/), copy `firmware/include/companion_secrets.example.h` values into `companion_secrets.h`, then:
+## Firmware (ESP32) — sensors + ML upload
 
 ```bat
+copy firmware\include\companion_secrets.example.h firmware\include\companion_secrets.h
+REM edit WiFi + backend URL in companion_secrets.h
+
+.\.venv\Scripts\python.exe tools\export_esp_models.py
+
 cd firmware
-pio run
 pio run -t upload
+pio device monitor
 ```
 
-Host in this workspace: install dev deps and build firmware:
-
-```bat
-pip install -r requirements-dev.txt
-cd firmware
-pio run
-```
-
-RAM ~15%, Flash ~77% on esp32dev (4MB). Live Open-Meteo: set `COMPANION_DEMO_MODE=false` in `.env`, then `pytest -m integration`.
+Complete guide: **`docs/esp_upload.md`**
 
 ## Docs
 

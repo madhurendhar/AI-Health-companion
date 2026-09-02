@@ -4,6 +4,11 @@
 *.pem
 credentials.json
 aws_credentials*
+firmware/include/companion_secrets.h
+firmware/arduino/**/companion_secrets.h
+
+# Large third-party datasets (do not upload)
+bidmc-ppg-and-respiration-dataset-1.0.0/
 
 # Python
 __pycache__/
