@@ -37,7 +37,7 @@ static void ensure_files() {
 }
 
 uint8_t sd_begin() {
-  SPI.begin();
+  SPI.begin(COMPANION_SD_SCK, COMPANION_SD_MISO, COMPANION_SD_MOSI, COMPANION_SD_CS);
   g_sd = SD.begin(COMPANION_SD_CS);
   if (g_sd) ensure_files();
   return g_sd;

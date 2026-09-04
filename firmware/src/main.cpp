@@ -191,15 +191,15 @@ static void update_display(uint32_t now_ms) {
 }
 
 static void i2c_scan() {
-  Serial.println("I2C scan (SDA=21 SCL=22):");
+  Serial.printf("I2C scan (SDA=%d SCL=%d):\n", COMPANION_I2C_SDA, COMPANION_I2C_SCL);
   uint8_t found = 0;
   for (uint8_t addr = 1; addr < 127; addr++) {
     Wire.beginTransmission(addr);
     if (Wire.endTransmission() == 0) {
       Serial.printf("  0x%02X", addr);
-      if (addr == 0x57) Serial.print(" MAX30102");
-      if (addr == 0x5A) Serial.print(" MLX90614");
-      if (addr == 0x3C) Serial.print(" OLED");
+      if (addr == COMPANION_MAX30102_ADDR) Serial.print(" MAX30102");
+      if (addr == COMPANION_MLX90614_ADDR) Serial.print(" MLX90614");
+      if (addr == COMPANION_OLED_ADDR) Serial.print(" OLED");
       Serial.println();
       found++;
     }
@@ -209,6 +209,10 @@ static void i2c_scan() {
 
 void setup() {
   Serial.begin(115200);
+  delay(300);
+  Serial.println();
+  Serial.println("========== AI HEALTH COMPANION ==========");
+  Serial.println("PlatformIO | SparkFun MAX + Adafruit MLX/DHT + MQ135");
   pinMode(COMPANION_LED_PIN, OUTPUT);
   pinMode(COMPANION_BUZZER_PIN, OUTPUT);
   Wire.begin(COMPANION_I2C_SDA, COMPANION_I2C_SCL);
@@ -223,24 +227,19 @@ void setup() {
 
   oled_begin();
   if (!max30102_begin()) {
-    Serial.println("MAX30102 init failed — check SDA/SCL wiring (21/22)");
-  } else {
-    Serial.printf("MAX30102 OK — LED drive 0x%02X (max brightness)\n", COMPANION_MAX30102_LED_PA);
+    Serial.printf("MAX30102 FAILED — SDA=%d SCL=%d 3.3V GND\n", COMPANION_I2C_SDA, COMPANION_I2C_SCL);
   }
-  if (!mlx90614_begin()) Serial.println("MLX90614 init failed");
-  else Serial.println("MLX90614 OK");
-  if (!dht22_begin()) Serial.println("DHT22 init failed");
-  else Serial.println("DHT22 OK on GPIO4");
+  if (!mlx90614_begin()) Serial.println("MLX90614 FAILED");
+  if (!dht22_begin()) Serial.println("DHT22 FAILED");
   mq135_begin();
   if (!sd_begin()) Serial.println("SD card not detected (optional)");
 
   companion_net_begin();
   net_offline = !companion_net_ok();
 
-  Serial.println("AI Health Companion ESP32 ready");
-  Serial.println("Sensors: MAX30102 MLX90614 DHT22 MQ135");
-  Serial.println("Edge ML: health_tree + flood_tree");
-  Serial.println("Serial: D=demo flood  L=live flood  C=calibrate  S=skip");
+  Serial.println("Ready. Place finger on MAX30102.");
+  Serial.println("Pages: HEALTH -> ENVIRONMENT -> FLOOD every 3s");
+  Serial.println("Keys: D=demo flood  L=live  C=calibrate  S=skip cal");
   if (demo) Serial.println("DEMO MODE / SIMULATED DATA");
 }
 
